@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Una Propuesta Especial</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #fce4ec; /* Un fondo rosa pastel */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            overflow: hidden; /* Evita barras de scroll */
+            text-align: center; /* Centra el contenido */
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 90%; /* Ajuste para móviles */
+            max-width: 500px; /* Ancho máximo para pantallas grandes */
+            box-sizing: border-box; /* Incluye padding y border en el ancho */
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap; /* Permite que los botones se envuelvan si no caben */
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            white-space: nowrap; /* Evita que el texto del botón se rompa */
+        }
+
+        #yesBtn {
+            background-color: #ff4d6d; /* Rosa fuerte */
+        }
+
+        #noBtn {
+            background-color: #888; /* Gris */
+            position: absolute;
+            transition: top 0.3s ease, left 0.3s ease; /* Transición suave */
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Media Query para pantallas más pequeñas (teléfonos) */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px; /* Reduce el padding */
+            }
+
+            h1 {
+                font-size: 1.8em; /* Reduce el tamaño del título */
+            }
+
+            .buttons {
+                flex-direction: column; /* Apila los botones verticalmente */
+            }
+
+            button {
+                padding: 12px 20px; /* Reduce el padding del botón */
+                font-size: 1em; /* Reduce el tamaño de la fuente del botón */
+                width: 100%; /* Los botones ocupan el ancho completo */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="mainContainer">
+        <h1 id="question">¿Quieres ser mi novia? ❤️</h1>
+        <div class="buttons">
+            <button id="yesBtn">Sí</button>
+            <button id="noBtn">No</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const question = document.getElementById('question');
+        const container = document.getElementById('mainContainer');
+
+        // 1. Lógica para el botón "No" que se escapa
+        const moveNoButton = () => {
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+
+            // Calcula una posición aleatoria dentro del viewport, evitando que se salga
+            const newTop = Math.random() * (viewportHeight - btnHeight);
+            const newLeft = Math.random() * (viewportWidth - btnWidth);
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.top = `${newTop}px`;
+            noBtn.style.left = `${newLeft}px`;
+        };
+
+        // Eventos para el botón "No"
+        noBtn.addEventListener('mouseover', moveNoButton); // Para escritorio
+        noBtn.addEventListener('touchstart', (e) => { // Para móvil
+            e.preventDefault(); // Evita el comportamiento de zoom en iOS
+            moveNoButton();
+        });
+
+        // 2. Lógica para el botón "Sí"
+        yesBtn.addEventListener('click', () => {
+            // Ocultamos los botones
+            yesBtn.style.display = 'none';
+            noBtn.style.display = 'none';
+
+            // Cambiamos el texto
+            question.textContent = '¡Lo sabía! ¡Lo sabia yo quiero mucho! ❤️❤️❤️❤️❤️';
+
+            // Función para lanzar fuegos artificiales de forma continua
+            const fireworks = () => {
+                const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+                function randomInRange(min, max) {
+                    return Math.random() * (max - min) + min;
+                }
+
+                // Lanza un tipo de confeti
+                confetti({
+                    ...defaults,
+                    particleCount: 50,
+                    scalar: 1.2,
+                    shapes: ['star']
+                });
+
+                // Lanza un segundo tipo de confeti para más variedad
+                confetti({
+                    ...defaults,
+                    particleCount: 30,
+                    scalar: 0.75,
+                    shapes: ['circle', 'square']
+                });
+            };
+
+            // Lanza los fuegos artificiales de manera repetida
+            const interval = setInterval(fireworks, 200);
+
+            // Detiene el lanzamiento de fuegos artificiales después de 2 segundos
+            setTimeout(() => {
+                clearInterval(interval);
+            }, 2000);
+        });
+    </script>
+
+</body>
+</html>
